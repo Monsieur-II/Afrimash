@@ -23,7 +23,9 @@ public class CustomersController(FileReaderService readerService, IOptions<Exter
             {
                 url = $"{config.Value.BaseUrl}/api/v1/new-customer";
                 
-                var newCustomerRes = await url.PostJsonAsync(data);
+                var newCustomerRes = await url
+                    .WithTimeout(TimeSpan.FromMinutes(10))
+                    .PostJsonAsync(data);
             
                 var popularProducts = await newCustomerRes.GetJsonAsync<List<RecommendationResponse>>();
 
@@ -32,7 +34,9 @@ public class CustomersController(FileReaderService readerService, IOptions<Exter
             
             url = $"{config.Value.BaseUrl}/api/v1/recommendations";
            
-            var response = await url.PostJsonAsync(data);
+            var response = await url
+                .WithTimeout(TimeSpan.FromMinutes(10))
+                .PostJsonAsync(data);
             
             var recommendations = await response.GetJsonAsync<List<RecommendationResponse>>();
 
