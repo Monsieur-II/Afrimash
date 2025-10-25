@@ -13,6 +13,14 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddLogging();
 
+builder.Services.AddCors(options => options
+    .AddPolicy("Afrimash", policy => policy
+        // Public API: Allowing any origin is intentional and documented.
+        .AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .WithExposedHeaders("Content-Disposition")));
+
 builder.Services.AddSingleton<FileReaderService>();
 
 builder.Services.Configure<ExternalUrls>(builder.Configuration.GetSection(nameof(ExternalUrls)));
@@ -53,6 +61,9 @@ if (app.Environment.IsDevelopment())
 // app.UseAuthorization();
 
 app.UseRouting();
+
+app.UseCors("Afrimash");
+
 app.MapControllers();
 
 app.LoadDataAsync();
